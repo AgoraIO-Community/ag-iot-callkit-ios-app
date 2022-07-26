@@ -22,8 +22,8 @@ pod 'AgoraIotCallkit'
 
 ## Author
 
-guzhihe@agora.io
+古至和, guzhihe@agora.io
 
 ## License
 
-IotCallkitIos is available under the MIT license. See the LICENSE file for more info.
+AgoraIotCallkit is available under the MIT license. See the LICENSE file for more info.
