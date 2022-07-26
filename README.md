@@ -22,7 +22,7 @@ pod 'AgoraIotCallkit'
 
 ## Author
 
-古至和, guzhihe@agora.io
+guzhihe@agora.io
 
 ## License
 
