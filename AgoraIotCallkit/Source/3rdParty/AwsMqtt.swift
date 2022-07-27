@@ -407,7 +407,6 @@ class AWSMqtt{
         iotDataManager.disconnect()
         AWSIoTDataManager.remove(forKey: thingName)
         credentialsProvider?.clearCredentials()
-        
     }
     
     func mqttConnEventCallback( _ status: AWSIoTMQTTStatus ) {
@@ -429,6 +428,7 @@ class AWSMqtt{
                     if(!self.subScribeWithClientCalled){
                         self.subScribeWithClient(completion: {succ,msg in})
                     }
+                    self.shadowRtcGet()
                     self._onStatusChanged(.Connected)
                 }
             case .disconnected:
@@ -488,7 +488,7 @@ class AWSMqtt{
     //let topic1 = "+/+/device/connect"
     func onTopic1Callback(topicPub:String,topicRcv:String,jsonDict:[String:Any])->Bool{
         let bs1 = topicRcv.findFirst("/")
-        _ = topicRcv.substring(to: bs1)
+        let productKey = topicRcv.substring(to: bs1)
         let remain = topicRcv.substring(from: bs1 + 1)
         let bs2 = remain.findFirst("/")
         let mac = remain.substring(to: bs2)
@@ -507,7 +507,7 @@ class AWSMqtt{
             log.e("mqtt connect value:'\(onoff)' error")
             return false
         }
-//        devStateListener?.onDeviceOnOffline(online: onoff == 0 ? false : true, deviceId: mac, productId: productKey)
+        //devStateListener?.onDeviceOnOffline(online: onoff == 0 ? false : true, deviceId: mac, productId: productKey)
         return true
     }
     //topic2 = "$aws/things/+/shadow/get/+"
@@ -559,7 +559,7 @@ class AWSMqtt{
             log.e("mqtt no 'deviceId' found for \(topic)")
             return false
         }
- //       devStateListener?.onDevicePropertyUpdated(deviceId: mac,deviceNumber:String(devNumber), props: jsonDict["data"] as? [String:Any])
+        //devStateListener?.onDevicePropertyUpdated(deviceId: mac,deviceNumber:String(devNumber), props: jsonDict["data"] as? [String:Any])
         return true
     }
     private func onBindListUpdated(_ topic:String,_ jsonDict:[String:Any])->Bool{
@@ -570,7 +570,7 @@ class AWSMqtt{
                     log.i("mqtt parse key:\(item.key)")
                     if let actionType = value["actionType"] as? String {
                         if let mac = value["mac"] as? String{
- //                           devStateListener?.onDeviceActionUpdated(deviceId: mac, actionType: actionType)
+                            //devStateListener?.onDeviceActionUpdated(deviceId: mac, actionType: actionType)
                             counter += 1
                         }
                         else{
@@ -693,6 +693,19 @@ class AWSMqtt{
             return
         }
     }
+
+    func shadowRtcGet(){
+        guard let iotDataManager = iotDataManager else {
+            log.e("mqtt iotDataManager is nil")
+            return
+        }
+        let qos:AWSIoTMQTTQoS = .messageDeliveryAttemptedAtLeastOnce
+        let topicGet = "$aws/things/" + self.thingName + "/shadow/name/rtc/get"
+        log.i("mqtt topic pub: qos \(qos.rawValue): '\(topicGet)'")
+        iotDataManager.publishString("", onTopic: topicGet, qoS: qos) {
+            log.i("mqtt topic ack: '\(topicGet)'")
+        }
+    }
     
     func updateRemoteRtcStatus(eid:String,enablePush:Bool)->Bool{
         guard let iotDataManager = iotDataManager else {
@@ -776,15 +789,6 @@ class AWSMqtt{
     func subscribe(topic:String,qos:AWSIoTMQTTQoS,callback:@escaping(String,String,[String:Any])->Bool,result:@escaping (Bool)->Void){
         let ret = iotDataManager?.subscribe(toTopic: topic, qoS: qos, fullCallback: {
             (curTopic,message) ->Void in
-            //let json = try! JSONSerialization.jsonObject(with: payload, options: .mutableContainers)as! Dictionary<String,Any>
-            
-//            let stringValue = NSString(data: payload, encoding: String.Encoding.utf8.rawValue)!
-//            //log.i("mqtt received:\(stringValue)   \(json)")
-//            var pay:Data = payload
-            //log.i("topic arrive:'\(topic)'")
-            //{"state":{"reported":{"100":1,"101":2,"102":0,"103":1,"104":30,"105":1,"106":50}},"metadata":{"reported":{"100":{"timestamp":1645794721},"101":{"timestamp":1645794721},"102":{"timestamp":1645794721},"103":{"timestamp":1645794721},"104":{"timestamp":1645794721},"105":{"timestamp":1645794721},"106":{"timestamp":1645794721}}},"version":1,"timestamp":1648462220}
-//            log.i("mqtt recv topic:\(topic)")
-//            log.i("          payload:\(payload)")
             let payload = message.messageData
             if let jsonDict = try? JSONSerialization.jsonObject(with: payload, options:.mutableContainers) as? [String: Any]{
                 log.i("mqtt topic rec: '\(curTopic)'")
@@ -794,79 +798,6 @@ class AWSMqtt{
                         log.e("mqtt message callback ret error for \(jsonDict)")
                     }
                 }
-//                if let state = jsonDict["state"] as? [String:Any]{
-
-//                    DispatchQueue.main.async {
-//                        if(!callback(topic,state)){
-//                            log.e("mqtt message callback ret error for \(jsonDict)")
-//                        }
-//                    }
-                    
-                    
-//                    if(topic.contains("/device/connect")){
-//                        for item in state {
-//                            if item.key == "reported"{
-//                                if let pairs = item.value as? [String:Any]{
-//                                    log.i("\(pairs)")
-//                                        DispatchQueue.main.async {
-//                                            self.listeners.invoke(id: 0, msg: "", dict: pairs)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    else if(topic.contains("/shadow/get/accepted")){
-//                        if let accepted = state["reported"] as? [String:Any]{
-//                            let things_name = topic.replacingOccurrences(of: "\\$aws/things/", with: "")
-//                            let name = things_name.replacingOccurrences(of: "/shadow/get/accepted", with: "")
-//                            if(name == self.clientId){
-//                                self.onCallStateUpdated(dict:accepted)
-//                            }
-//                            else{
-//                                log.e("clientId not match:\(name) != \(self.clientId)")
-//                            }
-//                        }
-//                        else{
-//                            log.e("json string error: no 'reported' \(jsonDict)")
-//                        }
-//                    }
-//                    else if(topic.contains("/shadow/name/rtc/update/accepted")){
-//                        if let desired = state["desired"] as? [String:Any]{
-//                            let things_name = topic.replacingOccurrences(of: "\\$aws/things/", with: "")
-//                            let name = things_name.replacingOccurrences(of: "/shadow/name/rtc/update/accepted", with: "")
-//                            if(name == self.clientId){
-//                                self.onCallStateUpdated(dict:desired)
-//                            }
-//                            else{
-//                                log.e("clientId not match:\(name) != \(self.clientId)")
-//                            }
-//                        }
-//                        else{
-//                            log.e("json string error: no 'desired' \(jsonDict)")
-//                        }
-//                    }
-//                    else if(topic.contains("/shadow/name/rtc/get/accepted")){
-//                        if let accepted = state["desired"] as? [String:Any]{
-//                            let things_name = topic.replacingOccurrences(of: "\\$aws/things/", with: "")
-//                            let name = things_name.replacingOccurrences(of: "/shadow/name/rtc/update/accepted", with: "")
-//                            if(name == self.clientId){
-//                                self.onCallStateUpdated(dict:accepted)
-//                            }
-//                            else{
-//                                log.e("clientId not match:\(name) != \(self.clientId)")
-//                            }
-//                        }
-//                        else{
-//                            log.e("json string error: no 'desired' \(jsonDict)")
-//                        }
-//                    }
-//                    else{
-//                        log.w("unhandled topic \(topic)")
-//                    }
-//                }
-//                else{
-//                    log.e("json string error: no 'state' \(jsonDict)")
-//                }
             }
             else{
                 log.e("mqtt can't parse topic:\(topic)")
@@ -887,13 +818,6 @@ class AWSMqtt{
         iotDataManager?.unsubscribeTopic(topic)
     }
     
-    struct UserControllerData{
-        let product_key:String
-        let action_type:String
-        let action_type_name:String
-        let account:String
-    }
-    
     func setDeviceStatus(account:String,productId:String,things_name:String,params:Dictionary<String,Any>,result: @escaping (Int, String)->Void){
         let topic = "$aws/things/" + things_name + "/shadow/update"
         let userControllerData = ["product_key":productId,"action_type":"1","action_type_name":"android","account":account]
@@ -909,13 +833,6 @@ class AWSMqtt{
             result(ErrCode.XERR_INVALID_PARAM,"输入的参数错误")
             return
         }
-        
-//        let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
-//        if(data == nil){
-//            log.e("mqtt setDeviceStatus param error:\(productKey) ,\(account)")
-//            result(ErrCode.XERR_INVALID_PARAM,"输入的参数错误",nil)
-//            return
-//        }
         let topicGetAccepted = "$aws/things/" + things_name + "/shadow/get/accepted"
         //addDeviceStatusListener(topicKey: topicGetAccepted,result: result)
         log.i("mqtt topic pub: '\(topic)' \(jsonStr!)")
@@ -924,11 +841,6 @@ class AWSMqtt{
             DispatchQueue.main.async {
                 result(ErrCode.XOK,"发送属性成功")
             }
-//            let topicGet = "$aws/things/" + things_name + "/shadow/get"
-////            log.i("mqtt publish topic : '\(topicGet)'")
-//            self.iotDataManager?.publishString("", onTopic: topicGet, qoS: .messageDeliveryAttemptedAtLeastOnce,ackCallback: {
-//                log.i("mqtt publish ack for \(topicGet)")
-//            })
         })
     }
     
