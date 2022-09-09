@@ -12,8 +12,8 @@ import AgoraIotCallkit
 struct HomePage: View {
     @EnvironmentObject var status: UserStatus
     @StateObject var statusObserver = StateListener()
-    @State var devid:String = ""
-    @State var phoneid:String = ""
+    @State var devid:String = "IVFESSRUKNJTMNCJNVFDKLKTKVHF6VCTKRPTAMBS"
+    @State var phoneid:String = "100000000000000000-727334130958385152"
     var body: some View {
         VStack(alignment:.leading){
             Text("当前账号:" + status.account).font(.system(size: (UIScreen.main.bounds.width * 19) / 414, weight: .light, design: .default))
@@ -71,7 +71,7 @@ struct HomePage: View {
             }
             if(devid != ""){
                 Text("生成被叫设备id('productKey'-'deviceId'):")
-                Text(demo.getCalleeId(deviceId: devid) ?? "").font(.system(size: (UIScreen.main.bounds.width * 18) / 414, weight: .light, design: .default))
+                Text(DemoApp.shared.getCalleeId(deviceId: devid) ?? "").font(.system(size: (UIScreen.main.bounds.width * 18) / 414, weight: .light, design: .default))
             }
             Spacer()
         }
@@ -84,7 +84,7 @@ struct HomePage: View {
         }
         log.i("callDevice \(id)")
         MyLoadingView.shared.show("正在呼叫设备...")
-        demo.callDevice(id,phone, {(succ,msg) in
+        DemoApp.shared.callDevice(id,phone, {(succ,msg) in
             log.i("demo app calldail ret:\(msg)(\(succ))")
             MyLoadingView.shared.hide()
             if(!succ){

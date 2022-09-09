@@ -113,78 +113,78 @@ extension AgoraLab{
             }
         }
         
-        func handleRspCert(_ certRsp:CertGet.Rsp,_ rsp:@escaping(Int,String,GranWinSession.Cert?)->Void){
-            if(certRsp.code != 0){
-                log.e("gw handleRspCert rsp error:\(certRsp.code),tip:\(certRsp.tip)")
-                rsp(ErrCode.XERR_ACCOUNT_LOGIN,certRsp.tip,nil)
-                return;
-            }
-            guard let info = certRsp.info else{
-                log.e("gw handleRspCert rsp info is null")
-                rsp(ErrCode.XERR_ACCOUNT_LOGIN,certRsp.tip,nil)
-                return
-            }
-            var cert = GranWinSession.Cert()
-            /*
-             let privateKey:String
-             let certificatePem:String
-             let certificateArn:String
-             let regionId:String
-             let domain:String
-             let thingName:String
-             let region:String
-             let deviceId:UInt64
-             */
-            cert.privateKey = info.privateKey
-            cert.certificatePem = info.certificatePem
-            cert.certificateArn = info.certificateArn
-            cert.regionId = info.regionId
-            cert.domain = info.domain
-            cert.thingName = info.thingName
-            cert.region = info.region
-            cert.deviceId = info.deviceId
-            
-            log.i("gw thingName: \(cert.thingName)")
-            rsp(ErrCode.XOK,certRsp.tip,cert)
-        }
+//        func handleRspCert(_ certRsp:CertGet.Rsp,_ rsp:@escaping(Int,String,GranWinSession.Cert?)->Void){
+//            if(certRsp.code != 0){
+//                log.e("gw handleRspCert rsp error:\(certRsp.code),tip:\(certRsp.tip)")
+//                rsp(ErrCode.XERR_ACCOUNT_LOGIN,certRsp.tip,nil)
+//                return;
+//            }
+//            guard let info = certRsp.info else{
+//                log.e("gw handleRspCert rsp info is null")
+//                rsp(ErrCode.XERR_ACCOUNT_LOGIN,certRsp.tip,nil)
+//                return
+//            }
+//            var cert = GranWinSession.Cert()
+//            /*
+//             let privateKey:String
+//             let certificatePem:String
+//             let certificateArn:String
+//             let regionId:String
+//             let domain:String
+//             let thingName:String
+//             let region:String
+//             let deviceId:UInt64
+//             */
+//            cert.privateKey = info.privateKey
+//            cert.certificatePem = info.certificatePem
+//            cert.certificateArn = info.certificateArn
+//            cert.regionId = info.regionId
+//            cert.domain = info.domain
+//            cert.thingName = info.thingName
+//            cert.region = info.region
+//            cert.deviceId = info.deviceId
+//
+//            log.i("gw thingName: \(cert.thingName)")
+//            rsp(ErrCode.XOK,certRsp.tip,cert)
+//        }
         
-        func handleRspLogin(_ loginRsp:Login.Data,_ rsp: @escaping (Int,String,GranWinSession?)->Void){
-            if(loginRsp.code != 0){
-                log.e("gw handleRspLogin rsp error:\(loginRsp.code),tip:\(loginRsp.tip)")
-                var ec = ErrCode.XERR_ACCOUNT_LOGIN
-                if(loginRsp.code == 10002){
-                    ec = ErrCode.XERR_ACCOUNT_NOT_EXIST
-                }
-                else if(loginRsp.code == 10003){
-                    ec = ErrCode.XERR_ACCOUNT_PASSWORD_ERR
-                }
-                rsp(ec,loginRsp.tip,nil)
-                return;
-            }
-            guard let info = loginRsp.info else{
-                log.e("gw handleRspLogin rsp info is null")
-                rsp(ErrCode.XERR_ACCOUNT_LOGIN,loginRsp.tip,nil)
-                return
-            }
-            let sess = GranWinSession()
-            
-            sess.account = info.account
-            sess.proof_sessionToken = info.proof.sessionToken
-            sess.proof_secretKey = info.proof.secretKey
-            sess.granwin_token = info.granwin_token
-            sess.endPoint = info.endpoint
-            sess.pool_token = info.pool.token
-            sess.pool_identifier = info.pool.identifier
-            sess.pool_identityId = info.pool.identityId
-            sess.pool_identityPoolId = info.pool.identityPoolId
-            sess.region = info.region
-            //sess.granwinToken = info.granwin_token
-            
-            log.i("gw token: \(sess.granwin_token)")
-            log.i("gw poolIdentifier: \(info.pool.identifier)")
-            log.i("gw login ret:\(info)")
-            rsp(ErrCode.XOK,loginRsp.tip,sess)
-        }
+//        func handleRspLogin(_ loginRsp:Login.Data,_ rsp: @escaping (Int,String,GranWinSession?)->Void){
+//            if(loginRsp.code != 0){
+//                log.e("gw handleRspLogin rsp error:\(loginRsp.code),tip:\(loginRsp.tip)")
+//                var ec = ErrCode.XERR_ACCOUNT_LOGIN
+//                if(loginRsp.code == 10002){
+//                    ec = ErrCode.XERR_ACCOUNT_NOT_EXIST
+//                }
+//                else if(loginRsp.code == 10003){
+//                    ec = ErrCode.XERR_ACCOUNT_PASSWORD_ERR
+//                }
+//                rsp(ec,loginRsp.tip,nil)
+//                return;
+//            }
+//            guard let info = loginRsp.info else{
+//                log.e("gw handleRspLogin rsp info is null")
+//                rsp(ErrCode.XERR_ACCOUNT_LOGIN,loginRsp.tip,nil)
+//                return
+//            }
+//            let sess = GranWinSession()
+//            
+//            sess.account = info.account
+//            sess.proof_sessionToken = info.proof.sessionToken
+//            sess.proof_secretKey = info.proof.secretKey
+//            sess.granwin_token = info.granwin_token
+//            sess.endPoint = info.endpoint
+//            sess.pool_token = info.pool.token
+//            sess.pool_identifier = info.pool.identifier
+//            sess.pool_identityId = info.pool.identityId
+//            sess.pool_identityPoolId = info.pool.identityPoolId
+//            sess.region = info.region
+//            //sess.granwinToken = info.granwin_token
+//            
+//            log.i("gw token: \(sess.granwin_token)")
+//            log.i("gw poolIdentifier: \(info.pool.identifier)")
+//            log.i("gw login ret:\(info)")
+//            rsp(ErrCode.XOK,loginRsp.tip,sess)
+//        }
     class RestToken{
         struct Req:Encodable{
             let grant_type:String  //授权类型。password：密码模式，client_credentials：客户端模式，refresh_token：刷新accessToken

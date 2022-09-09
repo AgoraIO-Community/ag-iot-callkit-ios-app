@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'AgoraIotCallkit'
-  s.version          = '1.0.0.1'
+  s.version          = '1.1.0.1'
   s.summary          = 'AgoraIotCallkit for iot development.'
 
 # This description is used to generate tags and improve search results.
@@ -49,6 +49,6 @@ TODO: Add long description of the pod here.
   s.dependency 'AWSMobileClient','2.27.6'
   s.dependency 'AWSIoT','2.27.6'
   s.dependency 'EMPush'
-  s.dependency 'AgoraRtcEngine_iOS_Beta', '4.0.0-beta.1'
+  s.dependency 'AgoraRtcEngine_iOS', '4.0.0-rc.1'
 end
 

@@ -19,7 +19,7 @@ class RtcSession{
         var view:AgoraRtcVideoCanvas? = nil
     }
     var pairing:Pairing = Pairing()
-    var paired = [UInt:VideoView]()
+ //   var paired = [UInt:VideoView]()
 }
 
 class RtcSetting{
@@ -31,7 +31,7 @@ class RtcSetting{
     var bitRate = AgoraVideoBitrateStandard
     var orientationMode:AgoraVideoOutputOrientationMode = .adaptative
     var renderMode:AgoraVideoRenderMode = .fit
-    var audioType = "G722" //G722
+    var audioType = "G722" //"G722" //G722
     var audioSampleRate = "16000"; //16000,8000
     
     var logFilePath : String? = nil
@@ -56,7 +56,7 @@ class PushNtfContext{
     var session:PushNtfSession{get{return _session}}
 }
 
-class GranWinSetting{
+class IotLinkSetting{
     
 }
 
@@ -98,11 +98,18 @@ struct AgoraLabSetting{
 }
 
 class AgoraLabToken{
-    var tokenType = ""
-    var acessToken = ""
-    var refreshToken = ""
-    var expireIn:UInt = 0
-    var scope = ""
+    var tokenType:String
+    var accessToken:String
+    var refreshToken:String
+    var expireIn:UInt
+    var scope:String
+    init(tokenType:String,accessToken:String,refreshToken:String,expireIn:UInt,scope:String){
+        self.tokenType = tokenType
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        self.expireIn = expireIn
+        self.scope = scope
+    }
 }
 
 struct AgoraLabSession{
@@ -110,14 +117,14 @@ struct AgoraLabSession{
     var clientId = "9598156a7d15428f83f828a70f40aad5"
     var secretKey = "MRbRz1kGau9BZE0gWRh9YMZSYc1Ue06v"
     var password = "111111"
-    var userName = ""
+    var userNamew = ""
     var grantType = "password"
     
-    var token = AgoraLabToken()
+    var token = AgoraLabToken(tokenType: "", accessToken: "", refreshToken: "", expireIn: 0, scope: "")
     
     func reset(){
         token.tokenType = ""
-        token.acessToken = ""
+        token.accessToken = ""
         token.expireIn = 0
         token.refreshToken = ""
         token.scope = ""
@@ -140,14 +147,79 @@ struct CallKitContext{
     var session:CallKitSession{get{return _session} set{_session = newValue}}
 }
 
-class GranWinSession{
+//class GranWinSession{
+//    var account:String = ""
+//    var granwin_token:String = ""  //granwinToken
+//
+//    var proof_sessionToken:String = ""
+//    var proof_secretKey:String = ""
+//    var endPoint:String = ""
+//    var region:String = ""
+//
+//    var pool_token:String = ""
+//    var pool_identityId:String = ""
+//    var pool_identityPoolId:String = ""
+//    var pool_identifier = ""
+//
+//    struct Cert{
+//        var privateKey:String = ""
+//        var certificatePem:String = ""
+//        var certificateArn:String = ""
+//        var regionId:String = ""
+//        var domain:String = ""
+//        var thingName:String = ""
+//        var region:String = ""
+//        var deviceId:UInt64 = 0
+//    }
+//    var cert:Cert = Cert()
+//    func reset(){
+//        account = ""
+//        granwin_token = ""
+//        proof_sessionToken = ""
+//        proof_secretKey = ""
+//    }
+//}
+
+struct LsToken {
+    let access_token:String
+    let token_type : String
+    let expires_in : UInt64
+    let scope : String
+}
+struct Pool {
+    let identifier : String
+    let identityId : String
+    let identityPoolId : String
+    let token : String
+}
+struct Proof {
+    let accessKeyId : String
+    let secretKey : String
+    let sessionToken : String
+    let sessionExpiration : UInt64
+}
+
+struct GyToken {
+    let endpoint:String
+    let pool : Pool
+    let expiration : UInt64
+    let iotlink_token : String
+    let proof : Proof?
+    let region : String
+    let account : String
+}
+
+class IotLinkSession{
+    var iotlink_token:String = ""
+    var expiration : UInt64 = 0
+    var endPoint:String = ""
+    var region:String = ""
     var account:String = ""
-    var granwin_token:String = ""  //granwinToken
     
     var proof_sessionToken:String = ""
     var proof_secretKey:String = ""
-    var endPoint:String = ""
-    var region:String = ""
+    var proof_accessKeyId:String = ""
+    var proof_sessionExpiration:UInt64 = 0
     
     var pool_token:String = ""
     var pool_identityId:String = ""
@@ -165,9 +237,27 @@ class GranWinSession{
         var deviceId:UInt64 = 0
     }
     var cert:Cert = Cert()
+    init(){}
+    init(granwin_token:String,expiration:UInt64,endPoint:String,region:String,account:String,
+         proof_sessionToken:String,proof_secretKey:String,proof_accessKeyId:String,proof_sessionExpiration:UInt64,
+         pool_token:String,pool_identityId:String,pool_identityPoolId:String,pool_identifier:String){
+        self.iotlink_token = granwin_token
+        self.expiration = expiration
+        self.endPoint = endPoint
+        self.region = region
+        
+        self.proof_sessionToken = proof_sessionToken
+        self.proof_secretKey = proof_secretKey
+        self.proof_accessKeyId = proof_accessKeyId
+        self.proof_sessionExpiration = proof_sessionExpiration
+        
+        self.pool_token = pool_token
+        self.pool_identityId = pool_identityId
+        self.pool_identityPoolId = pool_identityPoolId
+        self.pool_identifier = pool_identifier
+    }
     func reset(){
-        account = ""
-        granwin_token = ""
+        iotlink_token = ""
         proof_sessionToken = ""
         proof_secretKey = ""
     }
@@ -193,27 +283,34 @@ class IotMqttContext{
     var session:IotMqttSession{get{return _session} set{_session = newValue}}
 }
 
-class GranWinContext{
-    private var _setting = GranWinSetting()
-    private var _session = GranWinSession()
-    var setting:GranWinSetting{get{return _setting}}
-    var session:GranWinSession{get{return _session} set{_session = newValue}}
+//class GranWinContext{
+//    private var _setting = GranWinSetting()
+//    private var _session = GranWinSession()
+//    var setting:GranWinSetting{get{return _setting}}
+//    var session:GranWinSession{get{return _session} set{_session = newValue}}
+//}
+
+class IotLinkContext{
+    private var _setting = IotLinkSetting()
+    private var _session = IotLinkSession()
+    var setting:IotLinkSetting{get{return _setting}}
+    var session:IotLinkSession{get{return _session} set{_session = newValue}}
 }
 
 class Context{
-    private var _account:String = ""
+    private var _virtualNumber:String = ""
     private var _push:PushNtfContext = PushNtfContext()
     private var _call:CallKitContext = CallKitContext()
-    private var _gran:GranWinContext = GranWinContext()
+    private var _gran:IotLinkContext = IotLinkContext()
     private var _aglab:AgoraLabContext = AgoraLabContext()
     
-    private var _callBackFilter:(Int,String)->(Int,String) = {ec,msg in return (ec,msg)}
+    private var _callbackFilter:(Int,String)->(Int,String) = {ec,msg in return (ec,msg)}
     
     var push:PushNtfContext{get{return _push}}
-    var gran:GranWinContext{get{return _gran}}
+    var gyiot:IotLinkContext{get{return _gran}}
     var aglab:AgoraLabContext{get{return _aglab}set{_aglab = newValue}}
     var call:CallKitContext{get{return _call}set{_call = newValue}}
-    var account:String{get{return _account}set{_account = newValue}}
+    var virtualNumber:String{get{return _virtualNumber}set{_virtualNumber = newValue}}
     
-    var callBackFilter:(Int,String)->(Int,String){get{return _callBackFilter}set{_callBackFilter = newValue}}
+    var callbackFilter:(Int,String)->(Int,String){get{return _callbackFilter}set{_callbackFilter = newValue}}
 }

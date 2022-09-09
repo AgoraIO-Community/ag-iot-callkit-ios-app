@@ -11,7 +11,7 @@ import AgoraIotCallkit
 class StateListener : ObservableObject{
     @Published var refresh:Bool = false
     public init(){
-        demo.listener = self
+        DemoApp.shared.listener = self
     }
 }
 
@@ -143,6 +143,8 @@ class DemoApp{
             self.sdk?.callkitMgr.callAnswer(result: {ec,msg in
                 log.i("demo app callAnswer ret:\(msg)(\(ec))")
                 if(ec == ErrCode.XOK){
+                    self.sdk?.callkitMgr.muteLocalAudio(mute: false) { ec, msg in}//rtc may has bug when from audio mute to unmute
+                    self.sdk?.callkitMgr.muteLocalVideo(mute: false) { ec, msg in}
                     self._status.trans(FsmView.Event.MAIN)
                     self.sdk?.callkitMgr.setAudioEffect(effectId: e, result: {
                         ec,msg in
@@ -175,7 +177,8 @@ class DemoApp{
         
         sdk?.callkitMgr.register(incoming: {peer,msg,callin in
             if(callin == .CallIncoming){
-                iotsdk.callkitMgr.mutePeerAudio(mute: true, result: {ec,msg in})
+                iotsdk.callkitMgr.muteLocalAudio(mute: true, result: {ec,msg in})
+                iotsdk.callkitMgr.muteLocalVideo(mute: true, result: {ec,msg in})
             let buttons = [
                 OptionViewButton("接听",{answer(.NORMAL)}),
                 OptionViewButton("变声接听",changeVoice),
@@ -204,8 +207,7 @@ class DemoApp{
         sdk?.notificationMgr.updateToken(deviceToken)
     }
     
-    func register(_ acc: String, _ pwd:String,_ code:String,_ email:String?,_ phone:String?, _ cb:@escaping (Bool,String)->Void){
-        log.i("demo app register(\(acc),********,\(code)")
+    func register(_ acc: String, _ pwd:String,_ cb:@escaping (Bool,String)->Void){
         if(sdk == nil){
             cb(false,"sdk 未初始化")
         }
@@ -214,9 +216,29 @@ class DemoApp{
             var hint = ErrCode.XOK == ec ? "注册成功" : "注册失败"
             cb(ErrCode.XOK == ec ? true : false , hint + ":" + msg)
         }
+        ThirdAccountManager.reqRegister(acc, pwd, result)
     }
     
-    func login(_ acc:String,_ cb:@escaping (Bool,String)->Void){
+    var account:String = ""
+    var password:String = ""
+    func unregister(_ cb:@escaping (Bool,String)->Void){
+        let acc = account
+        let pwd = password
+        self.logout { succ, msg in
+            if(!succ){
+                cb(succ,msg)
+                return
+            }
+            let result = {
+                (ec:Int,msg:String)->Void in
+                var hint = ErrCode.XOK == ec ? "注销成功" : "注销失败"
+                cb(ErrCode.XOK == ec ? true : false , hint + ":" + msg)
+            }
+            ThirdAccountManager.reqUnRegister(acc, pwd,result)
+        }
+    }
+    
+    func login(_ acc:String,_ pwd:String, _ cb:@escaping (Bool,String)->Void){
         log.i("demo app login(\(acc))")
         if(sdk == nil){
             cb(false,"sdk 未初始化")
@@ -226,7 +248,17 @@ class DemoApp{
             var hint = ErrCode.XOK == ec ? "登录成功" : "登录失败"
             cb(ErrCode.XOK == ec ? true : false , hint + ":" + msg)
         }
-        sdk?.accountMgr.login(account: acc,result: result)
+        ThirdAccountManager.reqLogin(acc, pwd) { ec, msg, param in
+            if(ec != ErrCode.XOK){
+                cb(false,msg)
+                return
+            }
+            self.sdk?.accountMgr.login(param: param!, result: { ec, msg in
+                self.account = acc
+                self.password = pwd
+                cb(ec == ErrCode.XOK ? true : false, msg)
+            })
+        }
     }
 
 
@@ -234,7 +266,10 @@ class DemoApp{
         log.i("demo app logout()")
         if(sdk == nil){
             cb(false,"sdk 未初始化")
+            return
         }
+        self.account = ""
+        self.password = ""
         sdk?.accountMgr.logout(result: {
             ec,msg in
             cb(ec == ErrCode.XOK ? true : false,msg)
@@ -281,7 +316,7 @@ class DemoApp{
             cb(false,"peerId is invalid")
             return
         }
-
+        
         callMgr.callDial(peerId:peerId,attachMsg: "this is attach msg",result:{
             (ec,msg) in
             cb(ec == ErrCode.XOK ? true : false , msg)
@@ -312,5 +347,3 @@ class DemoApp{
         })
     }
 }
-
-let demo = DemoApp()

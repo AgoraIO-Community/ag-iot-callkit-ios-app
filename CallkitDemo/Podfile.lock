@@ -1,11 +1,31 @@
 PODS:
-  - AgoraIotCallkit (1.0.0.1):
-    - AgoraRtcEngine_iOS_Beta (= 4.0.0-beta.1)
+  - AgoraIotCallkit (1.1.0.1):
+    - AgoraRtcEngine_iOS (= 4.0.0-rc.1)
     - Alamofire (= 5.6.0)
     - AWSIoT (= 2.27.6)
     - AWSMobileClient (= 2.27.6)
     - EMPush
-  - AgoraRtcEngine_iOS_Beta (4.0.0.beta.1)
+  - AgoraRtcEngine_iOS (4.0.0-rc.1):
+    - AgoraRtcEngine_iOS/AINS (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/PVC (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/SuperResolution (= 4.0.0-rc.1)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/AINS (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/ClearVision (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/ContentInspect (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/PVC (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/ReplayKit (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/RtcBasic (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/SuperResolution (4.0.0-rc.1)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.0.0-rc.1)
   - Alamofire (5.6.0)
   - AWSAuthCore (2.27.6):
     - AWSCore (= 2.27.6)
@@ -29,7 +49,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - AgoraRtcEngine_iOS_Beta
+    - AgoraRtcEngine_iOS
     - Alamofire
     - AWSAuthCore
     - AWSCognitoIdentityProvider
@@ -44,8 +64,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  AgoraIotCallkit: cfed6bbe46e8b9943ce7393e2ea8ee915c752a29
-  AgoraRtcEngine_iOS_Beta: 9b9f5402acea6b8a30efbfe149b916dae90ddcb1
+  AgoraIotCallkit: 313ec64eac6733fc314c91d64f66aff1597c8f70
+  AgoraRtcEngine_iOS: 1b78af79120066c230cf9281d8587813ce6a8323
   Alamofire: 0c07058209f211e3d32824f8e0766d7c44ac83b3
   AWSAuthCore: 09226ae8dfc63d1338f503f53a38af2d3156267e
   AWSCognitoIdentityProvider: 9eb24a52488d32b75d8550e8a9d1be36229ae47d
@@ -55,6 +75,6 @@ SPEC CHECKSUMS:
   AWSMobileClient: e0ad3787f793d14c593379c2dba006e3bdad8bf1
   EMPush: b36c94b4ea33a69523566ead9eb721415f33f121
 
-PODFILE CHECKSUM: 18be4c90496cf9b46cb5cc7fc6063d91f90876c0
+PODFILE CHECKSUM: 3756c02876c9521f435c15e0863c58223dec53a7
 
 COCOAPODS: 1.11.2

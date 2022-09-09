@@ -19,7 +19,7 @@ internal class Proxy{
     var mqtt:AWSMqtt{get{return _mqtt}}
     
     init(event:StatusHandler, rule:RuleManager,cfg:Config,ctx:Context){
-        self._rtc = RtcEngine(setting: ctx.call.setting.rtc, session: ctx.call.session.rtc)
+        self._rtc = RtcEngine(setting: ctx.call.setting.rtc)
         self._ntf = PushNotifier(cfg: cfg)
         self._mqtt = AWSMqtt(cfg: cfg)
         self._mqtt.onStatusChanged = event.onMqttStatusChanged

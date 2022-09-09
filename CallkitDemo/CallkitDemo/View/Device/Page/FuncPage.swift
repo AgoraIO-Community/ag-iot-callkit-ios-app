@@ -89,7 +89,7 @@ struct FuncPage: View {
             }.padding(.bottom,5).padding(.top,10)
         AgoraVideoView(v:view).onAppear {
             log.i("ui appeared,setPeerVideoView ...")
-            demo.setPeerVideoView(view: view)
+            DemoApp.shared.setPeerVideoView(view: view)
         }.onDisappear {
             log.i("disappeared")
             //demo.setPeerVideoView(view: nil)

@@ -17,30 +17,27 @@ class CallListener : FsmCall.IListener{
     }
     
     func on_callkit_ready(_ srcEvent: FsmCall.Event) {
-        app.context.call.session.rtc.paired.removeAll(keepingCapacity: true)
+        //app.context.call.session.rtc.paired.removeAll(keepingCapacity: true)
         app.context.call.session.rtc.pairing.uid = 0
         app.context.call.session.rtc.pairing.view = nil
     }
     
     func do_REMOTE_JOIN(_ srcState: FsmCall.State) {
-        var paired = app.context.call.session.rtc.paired
-        
-        if(paired.count != 0){
-            log.e("call setPeerVideoView with error session count:\(paired.count)")
-            //return ErrCode.XERR_UNKNOWN
-        }
-        let pairing = app.context.call.session.rtc.pairing
-        //pairing.view = peerView
-        if(pairing.view != nil && pairing.uid != 0){
-            let canvas = AgoraRtcVideoCanvas()
-            canvas.uid = pairing.uid
-            canvas.renderMode = app.context.call.setting.rtc.renderMode
-            canvas.view = pairing.view
-            paired[pairing.uid] = RtcSession.VideoView()
-            pairing.view = nil
-            pairing.uid = 0
-            app.proxy.rtc.setupRemoteView(remote: canvas)
-        }
+    //        var paired = app.context.call.session.rtc.paired
+    //
+    //        if(paired.count != 0){
+    //            log.e("call setPeerVideoView with error session count:\(paired.count)")
+    //        }
+            let pairing = app.context.call.session.rtc.pairing
+
+            if(pairing.view != nil && pairing.uid != 0){
+                let uid = pairing.uid
+                let view = pairing.view
+                //paired[pairing.uid] = RtcSession.VideoView(uid: uid, view: view)
+                pairing.view = nil
+                pairing.uid = 0
+                app.proxy.rtc.setupRemoteView(peerView: view, uid: uid)
+            }
     }
     
     func on_callHangup(_ srcEvent: FsmCall.Event) {

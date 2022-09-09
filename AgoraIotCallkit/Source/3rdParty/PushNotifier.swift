@@ -4,14 +4,8 @@
 //
 //  Created by ADMIN on 2022/2/16.
 //
-
 import Foundation
 import EMPush
-
-//let IS_IOS7_OR_LATER =  ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-//let IS_IOS8_OR_LATER = ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-//let IS_IOS10_OR_LATER = ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0)
-
 
 class PushNotifier : NSObject, UIApplicationDelegate{
     var cfg:Config
@@ -19,7 +13,6 @@ class PushNotifier : NSObject, UIApplicationDelegate{
     
     private var state:Int = PushNotifier.NULLED
 
-    
     static private let NULLED = 0
     static private let CREATED = 1
     static private let ENTERED = 2
@@ -72,33 +65,8 @@ class PushNotifier : NSObject, UIApplicationDelegate{
                 }
             }
         })
-//        let ret = EMClient.shared().initializeSDK(with: options)
-//        if(ret != nil){
-//            log.e("ntf initialize failed:\(String(describing: ret!.errorDescription))")
-//            return false
-//        }
-//
-//        EMClient.shared().add(self, delegateQueue: nil)
-//        EMClient.shared().chatManager.add(self, delegateQueue: nil)
-//        EMClient.shared().pushManager.update(EMPushDisplayStyleSimpleBanner)
-        
-        //log.i("ntf create done")
         return
     }
-    
-//    func getLoginUid()->UInt?{
-//        if(!EMClient.shared().isLoggedIn){
-//            log.w("ntf IM did not login,please login first")
-//            return nil
-//        }
-//        let userName = EMClient.shared().currentUsername
-//        guard let userName = userName else {
-//            log.e("ntf user logged in,but name is nil")
-//            return nil
-//        }
-//        let uid = UInt(userName)
-//        return uid
-//    }
     
     func destroy(){
         log.i("ntf is destroying")
@@ -202,49 +170,7 @@ class PushNotifier : NSObject, UIApplicationDelegate{
         log.e("ntf bindDeviceToken Fail : \(String(describing: e.errorDescription))")
     }
     
-//    func login(userName:String,password:String,cb:@escaping (Bool)->Void){
-//        if(state != PushNotifier.CREATED){
-//            log.e("ntf state : \(state) error for login()")
-//            cb(false)
-//            return
-//        }
-//        if(EMClient.shared().isAutoLogin){
-//            EMClient.shared().pushManager.update(EMPushDisplayStyleSimpleBanner)
-//            let ret = registerNotification()
-//            state = PushNotifier.ENTERED
-//            cb(ret)
-//            return
-//        }
-//        EMClient.shared().login(withUsername: userName, password: password) { desc, er in
-//            log.i("ntf login result for user : '\(userName)' desc :'\(String(describing: desc == nil ? desc : desc!.description))' reason:\(String(describing: er?.errorDescription))(\(String(describing: er?.code))")
-//
-//            if(er?.code == EMErrorUserAlreadyLoginSame){
-//
-//                let ret = self.registerNotification()
-//                self.state = PushNotifier.ENTERED
-//                cb(ret)
-//            }
-//            else{
-//                if(er != nil){
-//                    log.e("ntf notifier user \(userName) login failed,ec:\(er!.code.rawValue)")
-//                    cb(er?.code.rawValue == 0 ? true : false)
-//                }
-//                else{
-//                    let ret = self.registerNotification()
-//                    self.state = PushNotifier.ENTERED
-//                    cb(ret)
-//                }
-//            }
-//        }
-//    }
-    
     func createAndLogin(appKey:String,cb:@escaping (Bool,String)->Void){
-//        if(!create(appKey: appKey)){
-//            log.w("ntf create client error when createAndLogin")
-//            cb(false)
-//            return
-//        }
-        //login(userName: userName, password: password, cb: cb)
         create(completion: cb)
     }
     
@@ -292,40 +218,6 @@ class PushNotifier : NSObject, UIApplicationDelegate{
         })
     }
 }
-
-//extension PushNotifier : UNUserNotificationCenterDelegate{
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//        log.i("ntf willPresent")
-//        let userInfo = notification.request.content.userInfo
-//        if let trigger = notification.request.trigger{
-//            if(trigger.isKind(of: UNPushNotificationTrigger.self)){
-//                log.i("apns userinfo:\(userInfo)")
-//            }
-//            else{
-//                let ext = userInfo["ext"]
-//                log.i("local usernifo:\(userInfo) ext:\(ext)")
-//            }
-//        }
-//        completionHandler([.alert,.sound,.badge])
-//    }
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-//        log.i("ntf didReceive")
-//        let userInfo = response.notification.request.content.userInfo
-//        if let trigger = response.notification.request.trigger{
-//            if(trigger.isKind(of: UNPushNotificationTrigger.self)){
-//                log.i("apns userinfo:\(userInfo)")
-//            }
-//            else{
-//                let ext = userInfo["ext"]
-//                log.i("local usernifo:\(userInfo) ext:\(String(describing: ext))")
-//            }
-//        }
-//        completionHandler()
-//    }
-//    func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {
-//        log.i("ntf openSettingFor")
-//    }
-//}
                                    
 extension PushNotifier : EMLocalNotificationDelegate{
     func emuserNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification) {
@@ -340,10 +232,10 @@ extension PushNotifier : EMLocalNotificationDelegate{
             }
             else{
                 let ext = userInfo["ext"]
-                log.i("ntf local usernifo:\(userInfo) ext:\(ext)")
+                log.i("ntf local usernifo:\(userInfo) ext:\(String(describing: ext))")
             }
         }
-        completionHandler([.alert,.sound,.badge])
+        //completionHandler([.alert,.sound,.badge])
     }
     func emuserNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         log.i("ntf didReceive")
@@ -407,49 +299,3 @@ extension PushNotifier :EMClientDelegate{
     }
 }
 
-//extension PushNotifier : EMChatManagerDelegate{
-//    func messagesDidReceive(_ aMessages: [Any]!) {
-//        log.i("ntf  messagesDidReceive(count:\(aMessages.count))")
-//        let msgs:[EMMessage] = aMessages as! [EMMessage]
-//        for msg in msgs{
-//            if(msg.body.type == EMMessageBodyTypeText){
-//                let textBody = msg.body as! EMTextMessageBody
-//                let text = textBody.text
-//                log.i("ntf msg body:\(String(describing: text))")
-//            }
-//        }
-//    }
-//    func cmdMessagesDidReceive(_ aCmdMessages: [Any]!) {
-//        log.i("ntf cmdMessagesDidReceive()")
-//    }
-//    func messagesDidRead(_ aMessages: [Any]!) {
-//        log.i("ntf messagesDidRead()")
-//    }
-//    func groupMessageDidRead(_ aMessage: EMMessage!, groupAcks aGroupAcks: [Any]!) {
-//        log.i("ntf groupMessageDidRead()")
-//    }
-//    func groupMessageAckHasChanged() {
-//        log.i("ntf groupMessageAckHasChanged()")
-//    }
-//    func onConversationRead(_ from: String!, to: String!) {
-//        log.i("ntf onConversationRead()")
-//    }
-//    func didReceiveHasReadAcks(_ aMessages: [Any]!) {
-//        log.i("ntf didReceiveHasReadAcks()")
-//    }
-//    func messagesDidRecall(_ aMessages: [Any]!) {
-//        log.i("ntf messagesDidRecall()")
-//    }
-//    func messagesDidDeliver(_ aMessages: [Any]!) {
-//        log.i("ntf messagesDidDeliver()")
-//    }
-//    func messageStatusDidChange(_ aMessage: EMMessage!, error aError: EMError!) {
-//        log.i("ntf messageStatusDidChange()")
-//    }
-//    func messageAttachmentStatusDidChange(_ aMessage: EMMessage!, error aError: EMError!) {
-//        log.i("ntf messageAttachmentStatusDidChange()")
-//    }
-//    func conversationListDidUpdate(_ aConversationList: [Any]!) {
-//        log.i("ntf conversationListDidUpdate()")
-//    }
-//}

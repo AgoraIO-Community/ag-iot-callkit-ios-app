@@ -45,7 +45,7 @@ open class Application{
         _config.projectId = initParam.projectId
         
         _status?.setStatusHandler(handler: sdkStatus)
-        _context.callBackFilter = callBackFilter
+        _context.callbackFilter = callBackFilter
         
         _context.call.setting.rtc.logFilePath = initParam.logFilePath
         _context.call.setting.rtc.publishAudio = initParam.publishAudio

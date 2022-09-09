@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6931F4386D944F9E56D18FB4 /* Pods_CallkitDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AB063B6942D58EADD6356E8 /* Pods_CallkitDemo.framework */; };
+		840BCFC428C9D6AC00DCE61C /* ThirdManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840BCFC328C9D6AC00DCE61C /* ThirdManager.swift */; };
 		847C1691289042000049CC68 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847C1690289042000049CC68 /* WelcomeView.swift */; };
 		8498CE55286EBBFC0079514C /* LoggerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498CE4F286EBBFC0079514C /* LoggerHelper.swift */; };
 		8498CE56286EBBFC0079514C /* LoggerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8498CE50286EBBFC0079514C /* LoggerManager.swift */; };
@@ -87,6 +88,7 @@
 		68253BE60CA5ACB96441AAB9 /* Pods-CallkitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CallkitDemo.release.xcconfig"; path = "Target Support Files/Pods-CallkitDemo/Pods-CallkitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		6957EF7D379DD2AEA700DFF1 /* Pods-SwiftUiDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUiDemo.debug.xcconfig"; path = "Target Support Files/Pods-SwiftUiDemo/Pods-SwiftUiDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		82EE33FA61848B6317B345F8 /* Pods-SwiftUiDemo-SwiftUiDemoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftUiDemo-SwiftUiDemoUITests.debug.xcconfig"; path = "Target Support Files/Pods-SwiftUiDemo-SwiftUiDemoUITests/Pods-SwiftUiDemo-SwiftUiDemoUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		840BCFC328C9D6AC00DCE61C /* ThirdManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdManager.swift; sourceTree = "<group>"; };
 		847C1690289042000049CC68 /* WelcomeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		847F70D92844AA3700F481E8 /* AgoraIotSdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraIotSdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		847F70DB2844AA6500F481E8 /* AgoraPvcExtension.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = AgoraPvcExtension.xcframework; path = Pods/AgoraPvcExtension.xcframework; sourceTree = "<group>"; };
@@ -205,6 +207,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		840BCFC228C9D6AC00DCE61C /* thirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				840BCFC328C9D6AC00DCE61C /* ThirdManager.swift */,
+			);
+			path = thirdParty;
+			sourceTree = "<group>";
+		};
 		8498CE4E286EBBFC0079514C /* LogViewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +249,7 @@
 		84CF013A2861A2D800A4B318 /* CallkitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				840BCFC228C9D6AC00DCE61C /* thirdParty */,
 				84D44D312875933D00BD747F /* Util */,
 				8498CE4E286EBBFC0079514C /* LogViewer */,
 				84CF013B2861A2D800A4B318 /* Misc */,
@@ -618,6 +629,7 @@
 				8498CE56286EBBFC0079514C /* LoggerManager.swift in Sources */,
 				84CF01CF2861A2D800A4B318 /* MyAlertView.swift in Sources */,
 				84CF01B32861A2D800A4B318 /* Config.swift in Sources */,
+				840BCFC428C9D6AC00DCE61C /* ThirdManager.swift in Sources */,
 				8498CE57286EBBFC0079514C /* LoggerViewController.swift in Sources */,
 				84CF01E82861A2D800A4B318 /* SplashView.swift in Sources */,
 				84CF01B12861A2D800A4B318 /* Fsm.swift in Sources */,

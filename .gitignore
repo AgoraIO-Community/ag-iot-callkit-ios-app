@@ -36,3 +36,4 @@ Carthage/Build
 #
 Pods/
 .vscode
+version.sh

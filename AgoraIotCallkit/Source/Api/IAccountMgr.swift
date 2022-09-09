@@ -23,6 +23,32 @@
  */
 import Foundation
 
+public class LoginParam : NSObject{
+    //token
+    public var tokenType:String = ""
+    public var accessToken:String = ""
+    public var refreshToken:String = ""
+    public var expireIn:UInt = 0
+    public var scope:String = ""
+    
+    //Session
+    public var grawin_token:String = ""
+    public var expiration : UInt64 = 0
+    public var endPoint:String = ""
+    public var region:String = ""
+    public var account:String = ""
+    
+    public var proof_sessionToken:String = ""
+    public var proof_secretKey:String = ""
+    public var proof_accessKeyId:String = ""
+    public var proof_sessionExpiration:UInt64 = 0
+    
+    public var pool_token:String = ""
+    public var pool_identityId:String = ""
+    public var pool_identityPoolId:String = ""
+    public var pool_identifier = ""
+}
+
 /*
  * @brief 账号管理接口
  */
@@ -32,7 +58,8 @@ public protocol IAccountMgr{
      * @param account : 账号Id
      * @param password : 账号密码
      */
-    func login(account: String, result:@escaping (Int,String)->Void)
+    //func login(account: String, result:@escaping (Int,String)->Void)
+    func login(param:LoginParam,result:@escaping(Int,String)->Void)
 
     /*
      * @brief 登出当前账号

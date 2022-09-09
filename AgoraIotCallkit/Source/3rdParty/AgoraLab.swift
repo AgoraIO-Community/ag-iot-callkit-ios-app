@@ -102,91 +102,91 @@ class AgoraLab {
            }
     }
     
-    public func reqSessInventCert(grawinToken:String,_ rsp:@escaping(Int,String,GranWinSession.Cert?)->Void){
-            let headers : HTTPHeaders = ["token":grawinToken]
-            let url = awsurl + api.CerGet
-            AF.request(url,method: .post,headers: headers)
-                .validate()
-                .responseDecodable(of: CertGet.Rsp.self) { (dataRsp : AFDataResponse<CertGet.Rsp>) in
-                    switch dataRsp.result{
-                    case .success(let value):
-                        self.handleRspCert(value, {ec,msg,cert in
-                            DispatchQueue.main.async {
-                                rsp(ec,msg,cert)
-                            }
-                        })
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            log.e("gw reqSessInventCert \(url) fail detail: \(error) ")
-                            rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
-                        }
-                    }
-            }
-        }
+//    public func reqSessInventCert(grawinToken:String,_ rsp:@escaping(Int,String,GranWinSession.Cert?)->Void){
+//            let headers : HTTPHeaders = ["token":grawinToken]
+//            let url = awsurl + api.CerGet
+//            AF.request(url,method: .post,headers: headers)
+//                .validate()
+//                .responseDecodable(of: CertGet.Rsp.self) { (dataRsp : AFDataResponse<CertGet.Rsp>) in
+//                    switch dataRsp.result{
+//                    case .success(let value):
+//                        self.handleRspCert(value, {ec,msg,cert in
+//                            DispatchQueue.main.async {
+//                                rsp(ec,msg,cert)
+//                            }
+//                        })
+//                    case .failure(let error):
+//                        DispatchQueue.main.async {
+//                            log.e("gw reqSessInventCert \(url) fail detail: \(error) ")
+//                            rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
+//                        }
+//                    }
+//            }
+//        }
         
-        func reqLogin(_ token:String,_ userName:String,_ rsp:@escaping(Int,String,GranWinSession?)->Void){
-            let header:HTTPHeaders = ["Content-Type":"application/json;charset=utf-8"]
-            let params:[String:String] = [:]
-            let url = http + api.anonymousLogin + "?username="+userName
-            
-            AF.request(url,method: .post,parameters: params,encoder: URLEncodedFormParameterEncoder.default,headers: header)
-                .validate()
-                .responseDecodable(of:Login.Rsp.self){(dataRsp:AFDataResponse<Login.Rsp>) in
-                switch dataRsp.result{
-                case .success(let ret):
-                    if(ret.code != 0){
-                        log.e("al reqLogin fail \(ret.msg)(\(ret.code))")
-                        rsp(ErrCode.XERR_ACCOUNT_LOGIN,ret.msg,nil)
-                        return
-                    }
-                    
-                    if let data = ret.data {
-                        self.handleRspLogin(data,rsp)
-                    }else{
-                        rsp(ErrCode.XERR_UNKNOWN,"无法解析参数信息",nil)
-                    }
-                    
-                case .failure(let error):
-                    log.e("al reqLogin \(url) fail for \(userName), detail: \(error) ")
-                    rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
-                }
-               }
-        }
+//        func reqLogin(_ token:String,_ userName:String,_ rsp:@escaping(Int,String,GranWinSession?)->Void){
+//            let header:HTTPHeaders = ["Content-Type":"application/json;charset=utf-8"]
+//            let params:[String:String] = [:]
+//            let url = http + api.anonymousLogin + "?username="+userName
+//
+//            AF.request(url,method: .post,parameters: params,encoder: URLEncodedFormParameterEncoder.default,headers: header)
+//                .validate()
+//                .responseDecodable(of:Login.Rsp.self){(dataRsp:AFDataResponse<Login.Rsp>) in
+//                switch dataRsp.result{
+//                case .success(let ret):
+//                    if(ret.code != 0){
+//                        log.e("al reqLogin fail \(ret.msg)(\(ret.code))")
+//                        rsp(ErrCode.XERR_ACCOUNT_LOGIN,ret.msg,nil)
+//                        return
+//                    }
+//
+//                    if let data = ret.data {
+//                        self.handleRspLogin(data,rsp)
+//                    }else{
+//                        rsp(ErrCode.XERR_UNKNOWN,"无法解析参数信息",nil)
+//                    }
+//
+//                case .failure(let error):
+//                    log.e("al reqLogin \(url) fail for \(userName), detail: \(error) ")
+//                    rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
+//                }
+//               }
+//        }
     
-    func reqGetToken(_ userName:String,_ password:String,_ scope:String,_ clientId:String,_ secretKey:String,_ rsp:@escaping(Int,String,AgoraLabToken?)->Void){
-        var params:Dictionary<String,String> = ["grant_type":"password", "username":userName,"password":password,"scope":scope,"client_id":clientId,"client_secret":secretKey]
-
-        let url = http + api.oauthResetToken
-        
-        AF.request(url,method: .post,parameters: params,encoder: JSONParameterEncoder.default)
-            .validate()
-            .responseDecodable(of:RestToken.Rsp.self){(dataRsp:AFDataResponse<RestToken.Rsp>) in
-            switch dataRsp.result{
-            case .success(let ret):
-                var token:AgoraLabToken? = nil
-                if(ret.code != 0){
-                    log.e("al reqGetToken fail \(ret.msg)(\(ret.code))")
-                }
-                else if(ret.data == nil){
-                    log.e("al reqGetToken data is nil \(ret.msg)(\(ret.code))")
-                }
-                else{
-                    let data = ret.data!
-                    token = AgoraLabToken()
-                    token?.acessToken = data.access_token
-                    token?.expireIn = data.expires_in
-                    token?.refreshToken = data.refresh_token
-                    token?.tokenType = data.token_type
-                    token?.scope = data.scope
-                }
-                
-                rsp(ret.code == 0 ? ErrCode.XOK : ErrCode.XERR_UNKNOWN,ret.msg,token)
-            case .failure(let error):
-                log.e("al reqGetToken \(url) fail for \(userName), detail: \(error) ")
-                rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
-            }
-           }
-    }
+//    func reqGetToken(_ userName:String,_ password:String,_ scope:String,_ clientId:String,_ secretKey:String,_ rsp:@escaping(Int,String,AgoraLabToken?)->Void){
+//        var params:Dictionary<String,String> = ["grant_type":"password", "username":userName,"password":password,"scope":scope,"client_id":clientId,"client_secret":secretKey]
+//
+//        let url = http + api.oauthResetToken
+//        
+//        AF.request(url,method: .post,parameters: params,encoder: JSONParameterEncoder.default)
+//            .validate()
+//            .responseDecodable(of:RestToken.Rsp.self){(dataRsp:AFDataResponse<RestToken.Rsp>) in
+//            switch dataRsp.result{
+//            case .success(let ret):
+//                var token:AgoraLabToken? = nil
+//                if(ret.code != 0){
+//                    log.e("al reqGetToken fail \(ret.msg)(\(ret.code))")
+//                }
+//                else if(ret.data == nil){
+//                    log.e("al reqGetToken data is nil \(ret.msg)(\(ret.code))")
+//                }
+//                else{
+//                    let data = ret.data!
+//                    token = AgoraLabToken()
+//                    token?.acessToken = data.access_token
+//                    token?.expireIn = data.expires_in
+//                    token?.refreshToken = data.refresh_token
+//                    token?.tokenType = data.token_type
+//                    token?.scope = data.scope
+//                }
+//                
+//                rsp(ret.code == 0 ? ErrCode.XOK : ErrCode.XERR_UNKNOWN,ret.msg,token)
+//            case .failure(let error):
+//                log.e("al reqGetToken \(url) fail for \(userName), detail: \(error) ")
+//                rsp(ErrCode.XERR_NETWORK,error.errorDescription ?? "网络请求失败",nil)
+//            }
+//           }
+//    }
     
     func reqLogout(_ account: String,_ rsp: @escaping (Int,String)->Void){
         //log.w("agoralab no api for logout")

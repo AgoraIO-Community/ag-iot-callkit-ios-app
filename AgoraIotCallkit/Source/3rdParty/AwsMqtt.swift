@@ -706,7 +706,7 @@ class AWSMqtt{
             log.i("mqtt topic ack: '\(topicGet)'")
         }
     }
-    
+    ////https://confluence.agoralab.co/pages/viewpage.action?pageId=944705001
     func updateRemoteRtcStatus(eid:String,enablePush:Bool)->Bool{
         guard let iotDataManager = iotDataManager else {
             log.e("mqtt iotDataManager is nil")
@@ -716,7 +716,7 @@ class AWSMqtt{
         let eid = enablePush ? eid : ""
 
         let qos:AWSIoTMQTTQoS = .messageDeliveryAttemptedAtLeastOnce
-        let topicUpdate = "$aws/things/" + thingName + "/shadow/name/rtc/update"
+        let topicUpdate = "$aws/things/" + thingName + "/shadow/name/rtc"
         let dict:[String:Any] = ["appId":self.appId,"deviceAlias":self.deviceAlias,"pusherId":eid,"localRecord":0,"disabledPush": enablePush ? false : true]
         let reported:[String:Any] = ["reported":dict]
         let stateJson:[String:Any] = ["state":reported]

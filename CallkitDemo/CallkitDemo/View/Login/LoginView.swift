@@ -12,9 +12,8 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var status: UserStatus
-    //陈雨顺:15889405260@163.com      密码123456789
-    @State var account: String = "guzhihe@agora.io"//kririleo@163.com" //"wufangfang@agora.io" //  //brain.wu@elime.vip"//guzhihe@agora.io"
-    @State var password: String = "gzh8888"//a12345678"//"12345678" //12345678"////"agora123"//gzh8888
+    @State var account: String = "13438383880"
+    @State var password: String = "gzh8888"
     
     @State private var showForgotPassword = false
     @State private var showSignup = false
@@ -46,14 +45,14 @@ struct LoginView: View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .padding()
 
-//                            SecureField("密码", text: $password)
-//                                //.frame(height: (UIScreen.main.bounds.width * 90) / 414, alignment: .center)
-//                                .padding(.leading, (UIScreen.main.bounds.width * 10) / 414)
-//                                .padding(.trailing, (UIScreen.main.bounds.width * 10) / 414)
-//                                .font(.system(size: (UIScreen.main.bounds.width * 30) / 414, weight: .light, design: .default))
-//                                //.imageScale(.small)
-//                                .textFieldStyle(RoundedBorderTextFieldStyle())
-//                                .padding()
+                            SecureField("密码", text: $password)
+                                //.frame(height: (UIScreen.main.bounds.width * 90) / 414, alignment: .center)
+                                .padding(.leading, (UIScreen.main.bounds.width * 10) / 414)
+                                .padding(.trailing, (UIScreen.main.bounds.width * 10) / 414)
+                                .font(.system(size: (UIScreen.main.bounds.width * 30) / 414, weight: .light, design: .default))
+                                //.imageScale(.small)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .padding()
                             
 //                        HStack() {
 //                            Spacer()
@@ -77,7 +76,7 @@ struct LoginView: View {
                     Button(action:{
                         if (self.isValidInputs()) {
                             MyLoadingView.shared.show("登录中...")
-                            demo.login(account,
+                            DemoApp.shared.login(account,password,
                             { succ,msg in
                                 MyLoadingView.shared.hide()
                                 if(succ){
@@ -94,6 +93,25 @@ struct LoginView: View {
                     })
                     {
                         Text("登录").padding()
+                            .frame(minWidth:0,maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    }.padding()
+                        
+                        
+                    Button(action:{
+                        if (self.isValidInputs()) {
+                            MyLoadingView.shared.show("注册中...")
+                            DemoApp.shared.register(account,password,
+                            { succ,msg in
+                                MyLoadingView.shared.hide()
+                                MyAlertView.shared.show(msg)
+                            })
+                        }
+                    })
+                    {
+                        Text("注册").padding()
                             .frame(minWidth:0,maxWidth: .infinity)
                             .foregroundColor(.white)
                             .background(Color.blue)

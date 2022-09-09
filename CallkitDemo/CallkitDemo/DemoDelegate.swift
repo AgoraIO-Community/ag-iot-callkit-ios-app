@@ -22,7 +22,7 @@ struct Demo: App {
     
     let content = ContentView()
     
-    let status = demo.status
+    let status = DemoApp.shared.status
     var body: some Scene {
         WindowGroup {
             content.environmentObject(status)

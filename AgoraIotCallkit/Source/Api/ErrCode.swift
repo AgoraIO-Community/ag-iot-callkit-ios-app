@@ -71,4 +71,6 @@ public class ErrCode : NSObject{
     @objc public static let XERR_CALLKIT_LOCAL_BUSY = -40008       ///< 本地端忙
     @objc public static let XERR_CALLKIT_ERR_OPT = -40009          ///< 不支持的错误操作
     @objc public static let XERR_CALLKIT_PEER_UNREG = -40010       ///< 对端未注册
+    @objc public static let XERR_CALLKIT_NO_APPID = -40011         ///< 未上报appid
+    @objc public static let XERR_CALLKIT_SAME_ID = -40012         ///< 主叫和被叫同一个id
 }

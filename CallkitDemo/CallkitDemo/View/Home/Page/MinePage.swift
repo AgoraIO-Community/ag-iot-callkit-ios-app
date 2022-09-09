@@ -166,12 +166,34 @@ struct MinePage: View {
                     .background(Color.blue)
                     .cornerRadius(8)
             }
+                
+            Button(action:{
+                unregister()
+            })
+            {
+                Text("注销").padding()
+                    .frame(minWidth:0,maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+            }
             Spacer()
             }
         }
         
     }
-    
+    func unregister(){
+        MyLoadingView.shared.show()
+        DemoApp.shared.unregister {succ, msg in
+            MyLoadingView.shared.hide()
+            if(!succ){
+                MyAlertView.shared.show(msg)
+            }
+            else{
+                status.trans(FsmView.Event.EXIT)
+            }
+        }
+    }
     func logout(){
         DemoApp.shared.logout({
             succ,msg in

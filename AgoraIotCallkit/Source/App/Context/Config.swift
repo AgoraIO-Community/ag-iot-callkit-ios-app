@@ -30,4 +30,3 @@ class Config {
     var agoraLabUrl:String = ""
     var awsmqttUrl:String = ""
 }
-//zhaoliheng  aec  g722

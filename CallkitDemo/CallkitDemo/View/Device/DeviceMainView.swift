@@ -15,7 +15,7 @@ struct DeviceMainView: View {
             ZStack(){
                 HStack(){
                 Button(action:{
-                                demo.hangupDevice({succ,msg in})
+                    DemoApp.shared.hangupDevice({succ,msg in})
                                 status.trans(FsmView.Event.BACK)
                 }){Text("返回")}.padding(.leading,10)
                 Spacer()
